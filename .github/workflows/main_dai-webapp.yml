@@ -29,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '(D:\a\dai\dai\TPO'
+          path: 'D:\a\dai\dai\TPO'
 
   deploy:
     runs-on: windows-latest
