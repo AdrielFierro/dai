@@ -52,4 +52,3 @@ jobs:
           app-name: "dai"
           slot-name: "Production"
           package: "*.jar"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C1F3AEBE238F44BFAE996741E26A2630 }}
