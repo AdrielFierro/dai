@@ -30,7 +30,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-
           path: "${{ github.workspace }}/TPO/target/*.jar"
 
   deploy:
@@ -51,9 +50,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_75C070CE942744C3997828FF13EF077F }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4592FF7ACBA04A10ABC8B75CC370215C }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_74E4821F9E424C3D86CA2B2ADA024562 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_1F56E89DDCA24F7F982C7E2706C5570C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B490BBA7FD8E457DB6E9DFDE2F5006EA }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1C7B5AB765E34A8ABBC3475660517B6F }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
