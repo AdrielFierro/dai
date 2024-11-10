@@ -1,10 +1,9 @@
-package com.tpo.TPO.service.geo;
+package com.tpo.TPO.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import com.tpo.TPO.service.geo.*;
 
 @Service
 public class GeoService {
