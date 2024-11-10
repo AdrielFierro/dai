@@ -126,6 +126,18 @@
         </dependency>
 
 
+				<dependency>
+			<groupId>com.azure.spring</groupId>
+			<artifactId>spring-cloud-azure-starter-storage</artifactId>
+		</dependency>
+
+<dependency>
+  <groupId>com.azure.spring</groupId>
+  <artifactId>spring-cloud-azure-starter-storage-blob</artifactId>
+  <version>5.18.0</version> <!-- Match the BOM version if specified -->
+</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -145,16 +157,7 @@
 		</plugins>
 	</build>
 
-		<dependency>
-			<groupId>com.azure.spring</groupId>
-			<artifactId>spring-cloud-azure-starter-storage</artifactId>
-		</dependency>
 
-<dependency>
-  <groupId>com.azure.spring</groupId>
-  <artifactId>spring-cloud-azure-starter-storage-blob</artifactId>
-  <version>5.18.0</version> <!-- Match the BOM version if specified -->
-</dependency>
 
 
 
