@@ -28,7 +28,6 @@ public class ImageService {
     // }
 
     private final String containerName = "imagecontainer";
-    private final String constr = "DefaultEndpointsProtocol=https;AccountName=latticestorageaccount1;AccountKey=PDthXHKwTJwgTBXk29UKQeW44GQAauZkvzrKIhY6bSIjlNCjbEA0DyiHql5e5P8FdLR5TjJWypgc+AStlmgDZA==;EndpointSuffix=core.windows.net";
 
     public String uploadImage(Integer userId, Integer postId, String imageName, long length, InputStream data)
             throws IOException {
