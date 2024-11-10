@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tpo.TPO.controller.config.JwtService;
 import com.tpo.TPO.entity.User;
 import com.tpo.TPO.repository.UserRepository;
 
@@ -20,6 +21,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtService jwts;
+
     public List<User> getAllUsers(String contains, int skip, int limit, String orderby) {
         Pageable pageable = PageRequest.of(skip / limit, limit, Sort.by(orderby));
         return userRepository.findUsers(contains, pageable);
@@ -32,7 +36,7 @@ public class UserService {
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
-    
+
     public User createUser(User user) {
         return userRepository.save(user);
     }
@@ -60,7 +64,7 @@ public class UserService {
     public Set<User> getFollowed(Integer userId) {
         return userRepository.getFollowed(userId);
     }
-    
+
     @Transactional
     public User followUser(Integer userId, Integer followUserId) {
         User user = userRepository.findById(userId)
@@ -85,10 +89,18 @@ public class UserService {
     public boolean isEmailUsed(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
-    
+
     public boolean isUsernameUsed(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
-    
-    
+
+    public Integer getIdfromToken(String accessToken) {
+
+        accessToken = accessToken.substring(7); // Eliminar "Bearer "
+        int idusuario = jwts.extractId(accessToken);
+
+        return idusuario;
+
+    }
+
 }

@@ -33,12 +33,14 @@ public class UserController {
         User user = userService.getUserById(userId);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
     // Post User
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
+
     // Update User
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestBody User user) {
@@ -114,5 +116,17 @@ public class UserController {
         return ResponseEntity.ok(exists);
     }
 
+    @GetMapping("/getId")
+    public ResponseEntity<?> getId(@RequestHeader("Authorization") String authorizationHeader) {
+
+        Integer userId = userService.getIdfromToken(authorizationHeader);
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+
+        return ResponseEntity.ok(userId);
+    }
 
 }
