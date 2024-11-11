@@ -21,7 +21,7 @@ public class Post {
     private String description;
 
     @Column(nullable = false)
-    private String image;
+    private List<String> image;
 
     @Column(nullable = false)
     private Integer userId;
@@ -31,5 +31,8 @@ public class Post {
     
     @Column(nullable = false)
     private LocalDateTime fecha;
+
+    @Column(nullable = true)
+    private String direc;
 
 }

@@ -61,6 +61,20 @@ public class User implements UserDetails {
     @ManyToMany
     @JoinTable(name = "user_followed", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
     private Set<User> followed;
+    
+    
+    @Column
+    private String backgroundImage;
+
+    
+    @ManyToMany
+    @JoinTable(
+        name = "user_fav_posts",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    @Column
+    private List<Post> favPosts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
