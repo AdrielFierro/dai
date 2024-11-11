@@ -25,18 +25,17 @@ public class ImageController {
     private ImageService imageservice;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
+    public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
 
-        String filename = file.getOriginalFilename();
-        InputStream inputStream = file.getInputStream();
+        if (file.isEmpty()) {
 
-        String uploadImage = imageservice.uploadImage(1, 1, filename, file.getSize(), inputStream);
+            return "problem";
 
-        if (uploadImage == null) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(uploadImage);
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(uploadImage);
+        imageservice.storeFile(file.getOriginalFilename(), file.getInputStream(), file.getSize());
+        return file.getOriginalFilename() + " Has been saved as a blob-item!!!";
+
     }
 
 }

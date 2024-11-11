@@ -1,9 +1,9 @@
-package com.tpo.TPO.controller.geo;
+package com.tpo.TPO.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.tpo.TPO.service.geo.GeoService;
+import com.tpo.TPO.service.GeoService;
 
 @RestController
 @RequestMapping("/geo")

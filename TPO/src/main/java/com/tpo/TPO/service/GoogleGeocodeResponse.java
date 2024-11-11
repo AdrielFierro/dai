@@ -1,4 +1,4 @@
-package com.tpo.TPO.service.geo;
+package com.tpo.TPO.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

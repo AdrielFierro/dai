@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.azure.storage.blob.BlobClient;
@@ -51,4 +52,20 @@ public class ImageService {
         return "wip";
 
     }
+
+    private String connectionString = "https://latticestorageaccount1.blob.core.windows.net";
+
+    private BlobContainerClient containerClient() {
+        BlobServiceClient serviceClient = new BlobServiceClientBuilder()
+                .connectionString(connectionString).buildClient();
+        BlobContainerClient container = serviceClient.getBlobContainerClient(containerName);
+        return container;
+    }
+
+    public String storeFile(String filename, InputStream content, long length) {
+        BlobClient client = containerClient().getBlobClient(filename);
+        client.upload(content, length);
+        return "File uploaded with success!";
+    }
+
 }
