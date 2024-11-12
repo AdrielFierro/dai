@@ -17,7 +17,6 @@ import com.tpo.TPO.repository.UserRepository;
 import com.tpo.TPO.repository.RefreshTokenRepository;
 import com.tpo.TPO.service.AuthenticationService;
 import com.tpo.TPO.service.RefreshTokenService;
-import com.tpo.TPO.service.UserService;
 import com.tpo.TPO.controller.config.JwtService;
 import com.tpo.TPO.entity.*;
 
@@ -29,9 +28,6 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationController {
 
     private final AuthenticationService service;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private RefreshTokenService refreshTokenService;

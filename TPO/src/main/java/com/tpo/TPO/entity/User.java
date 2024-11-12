@@ -13,10 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Data
 @Entity
 @Builder
@@ -61,18 +57,12 @@ public class User implements UserDetails {
     @ManyToMany
     @JoinTable(name = "user_followed", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
     private Set<User> followed;
-    
-    
+
     @Column
     private String backgroundImage;
 
-    
     @ManyToMany
-    @JoinTable(
-        name = "user_fav_posts",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "post_id")
-    )
+    @JoinTable(name = "user_fav_posts", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "post_id"))
     @Column
     private List<Post> favPosts;
 

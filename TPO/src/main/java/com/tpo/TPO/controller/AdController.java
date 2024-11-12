@@ -1,6 +1,5 @@
 package com.tpo.TPO.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ public class AdController {
 
     private final AdApiService adApiService;
 
-    @Autowired
     public AdController(AdApiService adApiService) {
         this.adApiService = adApiService;
     }
@@ -30,7 +28,8 @@ public class AdController {
             ResponseEntity<Object> response = adApiService.getAdsFromExternalApi();
             return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
         } catch (RestClientException e) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Error al obtener los anuncios externos: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("Error al obtener los anuncios externos: " + e.getMessage());
         }
     }
 }

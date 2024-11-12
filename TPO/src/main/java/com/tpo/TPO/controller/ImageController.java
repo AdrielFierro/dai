@@ -1,23 +1,13 @@
 package com.tpo.TPO.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.azure.core.util.BinaryData;
-import com.tpo.TPO.controller.dto.ImageDTO;
-import com.tpo.TPO.entity.Post;
 import com.tpo.TPO.service.ImageService;
-import com.tpo.TPO.service.PostService;
-
-import jakarta.mail.Multipart;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -32,6 +22,7 @@ public class ImageController {
             throws IOException {
         try (InputStream inputStream = file.getInputStream()) {
 
+            @SuppressWarnings("null")
             String imageurl = imageservice.uploadImage(file.getOriginalFilename().toString(), inputStream,
                     file.getSize());
 

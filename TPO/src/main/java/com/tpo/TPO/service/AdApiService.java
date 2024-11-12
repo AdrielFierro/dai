@@ -1,6 +1,5 @@
 package com.tpo.TPO.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,7 +9,6 @@ public class AdApiService {
 
     private final RestTemplate restTemplate;
 
-    @Autowired
     public AdApiService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }

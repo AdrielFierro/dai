@@ -1,21 +1,14 @@
 package com.tpo.TPO.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import javax.imageio.ImageIO;
-
-import java.net.*;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.io.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tpo.TPO.repository.ImageRepository;
@@ -24,10 +17,6 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.awt.image.*;
 
 @Service
 public class ImageService {
@@ -70,6 +59,21 @@ public class ImageService {
 
         return null;
 
+    }
+
+    public ArrayList<String> fileToURL(List<MultipartFile> imagesPost) throws IOException {
+
+        ArrayList<String> urls = new ArrayList<String>();
+
+        for (MultipartFile mf : imagesPost) {
+            InputStream data = mf.getInputStream();
+            String filename = mf.getOriginalFilename();
+            long lenght = mf.getSize();
+            String url = this.uploadImage(filename, data, lenght);
+            urls.add(url);
+        }
+
+        return urls;
     }
 
 }

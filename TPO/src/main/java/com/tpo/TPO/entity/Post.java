@@ -1,18 +1,23 @@
 package com.tpo.TPO.entity;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Post {
 
-    public Post() {
-    }
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer postId;
@@ -21,14 +26,14 @@ public class Post {
     private String description;
 
     @Column(nullable = false)
-    private List<String> image;
+    private ArrayList<String> image;
 
     @Column(nullable = false)
     private Integer userId;
 
-    @Column(nullable = false)
+    @Column
     private List<Integer> usersLikes;
-    
+
     @Column(nullable = false)
     private LocalDateTime fecha;
 
