@@ -1,22 +1,33 @@
 package com.tpo.TPO.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
+
+import java.net.*;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.io.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tpo.TPO.repository.ImageRepository;
+import com.azure.core.util.BinaryData;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
-import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
-import com.tpo.TPO.entity.Image;
-import com.tpo.TPO.repository.ImageRepository;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import java.awt.image.*;
 
 @Service
 public class ImageService {
@@ -24,48 +35,41 @@ public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
-    // public ImageRepository(BlobServiceClient blobServiceClient) {
-    // this.blobServiceClient = blobServiceClient;
-    // }
+    private BlobServiceClient blobServiceClient;
 
     private final String containerName = "imagecontainer";
 
-    public String uploadImage(Integer userId, Integer postId, String imageName, long length, InputStream data)
+    public String uploadImage(String originalImageName, InputStream data, long length)
             throws IOException {
+        try {
 
-        // // Get the BlobContainerClient object to interact with the container
-        // BlobContainerClient blobContainerClient =
-        // blobServiceClient.getBlobContainerClient(containerName);
+            BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().connectionString(
+                    "DefaultEndpointsProtocol=https;AccountName=latticestorageaccount1;AccountKey=PDthXHKwTJwgTBXk29UKQeW44GQAauZkvzrKIhY6bSIjlNCjbEA0DyiHql5e5P8FdLR5TjJWypgc+AStlmgDZA==;EndpointSuffix=core.windows.net")
+                    .buildClient();
 
-        // // Rename the image file to a unique name
-        // String newImageName = UUID.randomUUID().toString() +
-        // imageName.substring(imageName.lastIndexOf("."));
+            BlobContainerClient blobcontainerclient = blobServiceClient.getBlobContainerClient(containerName);
 
-        // // Get the BlobClient object to interact with the specified blob
-        // BlobClient blobClient = blobContainerClient.getBlobClient(newImageName);
+            // String newImageName = UUID.randomUUID().toString()
+            // + originalImageName.substring(originalImageName.lastIndexOf(""));
 
-        // // Upload the image file to the blob
-        // blobClient.upload(data, length, true);
+            String newImageName = UUID.randomUUID().toString()
+                    + originalImageName;
 
-        // return blobClient.getBlobUrl();
+            BlobClient blobClient = blobcontainerclient.getBlobClient(newImageName);
+            blobClient.upload(data, length, true);
+            return blobClient.getBlobUrl();
 
-        return "wip";
+        } catch (Exception e) {
+            return e.getMessage();
+
+        }
 
     }
 
-    private String connectionString = "https://latticestorageaccount1.blob.core.windows.net";
+    public ResponseEntity<BinaryData> downloadImage(String url) throws IOException {
 
-    private BlobContainerClient containerClient() {
-        BlobServiceClient serviceClient = new BlobServiceClientBuilder()
-                .connectionString(connectionString).buildClient();
-        BlobContainerClient container = serviceClient.getBlobContainerClient(containerName);
-        return container;
-    }
+        return null;
 
-    public String storeFile(String filename, InputStream content, long length) {
-        BlobClient client = containerClient().getBlobClient(filename);
-        client.upload(content, length);
-        return "File uploaded with success!";
     }
 
 }

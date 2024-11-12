@@ -41,11 +41,25 @@
 			<version>1.4.0</version>
 		</dependency>
 
+
+
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>jakarta.mail</artifactId>
 			<version>2.0.1</version>
 		</dependency>
+
+
+<dependency>
+    <groupId>com.azure.spring</groupId>
+    <artifactId>spring-cloud-azure-starter-storage-blob</artifactId>
+    <version>4.2.0</version>
+</dependency>
+
+<dependency>
+    <groupId>com.azure.spring</groupId>
+    <artifactId>spring-cloud-azure-starter-keyvault</artifactId>
+</dependency>
 
 
 
@@ -113,10 +127,7 @@
 
 
 
-		<dependency>
-			<groupId>com.azure.spring</groupId>
-			<artifactId>spring-cloud-azure-starter-storage</artifactId>
-		</dependency>
+
 
 
 		<dependency>
@@ -126,16 +137,27 @@
         </dependency>
 
 
-				<dependency>
-			<groupId>com.azure.spring</groupId>
-			<artifactId>spring-cloud-azure-starter-storage</artifactId>
-		</dependency>
 
 <dependency>
 <groupId>com.azure.spring</groupId>
 <artifactId>spring-cloud-azure-starter-storage-blob</artifactId>
 <version>5.18.0</version> <!-- Match the BOM version if specified -->
 </dependency>
+
+
+<!-- https://mvnrepository.com/artifact/com.azure/azure-storage-blob -->
+<dependency>
+    <groupId>com.azure</groupId>
+    <artifactId>azure-storage-blob</artifactId>
+    <version>12.28.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-webflux</artifactId>
+</dependency>
+
 
 
 	</dependencies>
