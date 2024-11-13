@@ -32,8 +32,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
         Set<User> getFollowed(@Param("userId") Integer userId);
 
         // Consulta para obtener usuarios aleatorios
-        @Query(value = "SELECT u FROM User u ORDER BY RAND()")
-        List<User> findRandomUsers(Pageable pageable);
+        @Query(value = "SELECT * FROM User u ORDER BY RAND() LIMIT 5", nativeQuery = true)
+        List<User> findRandomUsers();
 
         Optional<User> findByName(String name);
 

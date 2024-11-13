@@ -144,8 +144,8 @@ public class UserService {
 
     }
     
-    public List<User> getRandomUsers(Pageable pageable) {
-        return userRepository.findRandomUsers(pageable); // Pass the pageable object directly
+    public List<User> getRandomUsers() {
+        return userRepository.findRandomUsers(); // Llamada a la consulta sin limit
     }
     
 

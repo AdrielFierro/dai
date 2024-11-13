@@ -138,12 +138,12 @@ public class UserController {
 
     // Get Random Users
     @GetMapping("/random")
-    public ResponseEntity<List<User>> getRandomUsers(@RequestParam int limit) {
-        Pageable pageable = PageRequest.of(0, limit); // Create pageable with 0 as page number and 'limit' as size
-        List<User> randomUsers = userService.getRandomUsers(pageable); // Pass pageable to the service
+    public ResponseEntity<List<User>> getRandomUsers() {
+        List<User> randomUsers = userService.getRandomUsers(); // No es necesario pasar limit
         if (randomUsers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
+        System.out.println(randomUsers);
         return ResponseEntity.ok(randomUsers);
     }
 
