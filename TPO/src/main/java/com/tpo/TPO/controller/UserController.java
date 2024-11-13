@@ -97,6 +97,28 @@ public class UserController {
         }
     }
 
+    // Endpoint para dejar de seguir a un usuario
+    @DeleteMapping("/{userId}/unfollow/{unfollowUserId}")
+    public ResponseEntity<String> unfollowUser(
+            @PathVariable Integer userId,
+            @PathVariable Integer unfollowUserId) {
+        try {
+            // Obtén el usuario y verifica si está siguiendo al usuario
+            User u = userService.getUserById(userId);
+            if (u == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+            
+            // Llama al servicio para dejar de seguir al usuario
+            userService.unfollowUser(userId, unfollowUserId);
+            return ResponseEntity.status(HttpStatus.OK).body("User unfollowed successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User is not following the specified user");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User to unfollow not found");
+        }
+    }
+
     // Get User by Email
     @GetMapping("/email")
     public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
