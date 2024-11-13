@@ -60,12 +60,12 @@ public class User implements UserDetails {
     @JoinTable(name = "user_followed", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
     private Set<User> followed;
      */
-    
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Integer> followersIds= new HashSet<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Integer> followedIds= new HashSet<>();
+    private Set<Integer> followersIds = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Integer> followedIds = new HashSet<>();
 
     @Column
     private String backgroundImage;
@@ -98,21 +98,21 @@ public class User implements UserDetails {
     }
 
 
-        // Métodos getter y setter para followedIds
-        public Set<Integer> getFollowedIds() {
-            return followedIds;
-        }
-    
-        public void setFollowedIds(Set<Integer> followedIds) {
-            this.followedIds = followedIds;
-        }
-    
-        // Métodos getter y setter para followersIds
-        public Set<Integer> getFollowersIds() {
-            return followersIds;
-        }
-    
-        public void setFollowersIds(Set<Integer> followersIds) {
-            this.followersIds = followersIds;
-        }
+    // Métodos getter y setter para followedIds
+    public Set<Integer> getFollowedIds() {
+        return followedIds;
+    }
+
+    public void setFollowedIds(Set<Integer> followedIds) {
+        this.followedIds = followedIds;
+    }
+
+    // Métodos getter y setter para followersIds
+    public Set<Integer> getFollowersIds() {
+        return followersIds;
+    }
+
+    public void setFollowersIds(Set<Integer> followersIds) {
+        this.followersIds = followersIds;
+    }
 }
