@@ -15,8 +15,10 @@ import com.tpo.TPO.service.UserService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
@@ -80,11 +82,15 @@ public class PostController {
     // Método para obtener el timeline de un usuario
     @GetMapping("/timeline/{userId}")
     public ResponseEntity<List<Post>> getTimeline(@PathVariable Integer userId) {
-        List<Post> timelinePosts = postService.getTimeline(userId);
+        List<Post> timelinePosts = postService.getPostsByUser(userId);
         if (timelinePosts.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(timelinePosts);
+        List<Post> filteredAndSortedPosts = timelinePosts.stream()
+            .filter(post -> post.getImage() != null && !post.getImage().isEmpty())
+                .sorted(Comparator.comparing(Post::getFecha).reversed())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(filteredAndSortedPosts);
     }
 
     // Método para obtener posts de un usuario específico
@@ -94,7 +100,10 @@ public class PostController {
         if (posts.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(posts);
+        List<Post> filteredPosts = posts.stream()
+                .filter(post -> post.getImage() != null && !post.getImage().isEmpty())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(filteredPosts);
     }
 
 }
