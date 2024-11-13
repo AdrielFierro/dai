@@ -1,11 +1,13 @@
 package com.tpo.TPO.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.tpo.TPO.entity.User;
 import com.tpo.TPO.service.UserService;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
@@ -127,6 +129,17 @@ public class UserController {
         }
 
         return ResponseEntity.ok(userId);
+    }
+
+    // Get Random Users
+    @GetMapping("/random")
+    public ResponseEntity<List<User>> getRandomUsers(@RequestParam int limit) {
+        Pageable pageable = PageRequest.of(0, limit); // Create pageable with 0 as page number and 'limit' as size
+        List<User> randomUsers = userService.getRandomUsers(pageable); // Pass pageable to the service
+        if (randomUsers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(randomUsers);
     }
 
 }

@@ -30,6 +30,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
         @Query("SELECT f FROM User u JOIN u.followed f WHERE u.id = :userId")
         Set<User> getFollowed(@Param("userId") Integer userId);
 
+        // Consulta para obtener usuarios aleatorios
+        @Query(value = "SELECT u FROM User u ORDER BY RAND()")
+        List<User> findRandomUsers(Pageable pageable);
+
         Optional<User> findByName(String name);
 
         Optional<User> findByUsername(String username);
