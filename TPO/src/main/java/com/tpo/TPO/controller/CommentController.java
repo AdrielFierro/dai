@@ -2,6 +2,9 @@ package com.tpo.TPO.controller;
 
 import com.tpo.TPO.entity.Comment;
 import com.tpo.TPO.service.CommentService;
+import com.tpo.TPO.service.UserService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,9 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    @Autowired
+    UserService userService;
+
     // Retrieve all comments of a specific post
     @GetMapping
     public ResponseEntity<List<Comment>> getCommentsPostID(@PathVariable Integer postId) {
@@ -30,8 +36,10 @@ public class CommentController {
 
     // Post a new comment to a post
     @PostMapping
-    public ResponseEntity<Comment> postCommentsPostID(@PathVariable Integer postId, @RequestBody Comment comment) {
-        Comment createdComment = commentService.createComment(postId, comment);
+    public ResponseEntity<Comment> postCommentsPostID(@PathVariable Integer postId, @RequestBody Comment comment,
+            @RequestHeader("Authorization") String authorizationHeader) {
+        Integer userId = userService.getIdfromToken(authorizationHeader);
+        Comment createdComment = commentService.createComment(postId, comment, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 

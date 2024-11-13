@@ -1,15 +1,11 @@
 package com.tpo.TPO.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.tpo.TPO.entity.User;
-import com.tpo.TPO.repository.UserRepository;
 import com.tpo.TPO.service.UserService;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +15,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    private UserRepository userRepository;
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(
             @RequestParam String contains,
@@ -77,13 +73,11 @@ public class UserController {
     public ResponseEntity<Set<User>> getFollowedUsers(@PathVariable Integer userId) {
         User user = userService.getUserById(userId);
         Set<Integer> followedIds = user.getFollowedIds();
-    
+
         // Consulta los usuarios por sus IDs
         Set<User> followedUsers = userService.getFollowedUsers(followedIds);
         return ResponseEntity.ok(followedUsers);
     }
-    
-    
 
     @PostMapping("/{userId}/follow/{followUserId}")
     public ResponseEntity<String> followUser(

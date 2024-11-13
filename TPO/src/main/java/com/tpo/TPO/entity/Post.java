@@ -38,4 +38,7 @@ public class Post {
     @Column(nullable = true)
     private String direc;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Comment> comments;
+
 }

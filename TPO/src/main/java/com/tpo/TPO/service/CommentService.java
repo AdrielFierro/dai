@@ -22,8 +22,9 @@ public class CommentService {
     }
 
     // Post a new comment to a post
-    public Comment createComment(Integer postId, Comment comment) {
+    public Comment createComment(Integer postId, Comment comment, Integer userId) {
         comment.setPostId(postId);
+        comment.setUserId(userId);
         return commentRepository.save(comment);
     }
 
