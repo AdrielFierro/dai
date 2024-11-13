@@ -11,20 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tpo.TPO.repository.ImageRepository;
 import com.azure.core.util.BinaryData;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.tpo.TPO.entity.Image;
+import com.tpo.TPO.repository.ImageRepository;
 
 @Service
 public class ImageService {
 
     @Autowired
-    private ImageRepository imageRepository;
-
-    private BlobServiceClient blobServiceClient;
+    ImageRepository imageRepository;
 
     private final String containerName = "imagecontainer";
 
@@ -74,6 +73,10 @@ public class ImageService {
         }
 
         return urls;
+    }
+
+    public Image createImage(Image image) {
+        return imageRepository.save(image);
     }
 
 }

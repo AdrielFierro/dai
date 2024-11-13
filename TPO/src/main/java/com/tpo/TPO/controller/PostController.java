@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 
 import com.tpo.TPO.controller.dto.PostDTO;
@@ -18,8 +17,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/posts")
@@ -41,7 +38,7 @@ public class PostController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Post> createPost(@RequestHeader("Authorization") String authorizationHeader,
-                                           @ModelAttribute PostDTO postDTO)
+            @ModelAttribute PostDTO postDTO)
             throws IOException {
 
         Integer userId = userService.getIdfromToken(authorizationHeader);
@@ -63,9 +60,8 @@ public class PostController {
 
         Optional<Post> post = postService.getPostById(postId);
         Post realPost = post.get();
-        List<String> images = realPost.getImage();
 
-        return images;
+        return realPost.getImage();
 
     }
 
