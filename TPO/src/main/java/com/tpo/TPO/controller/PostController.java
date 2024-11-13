@@ -1,5 +1,6 @@
 package com.tpo.TPO.controller;
 
+import com.tpo.TPO.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,7 @@ import com.tpo.TPO.service.UserService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -82,15 +80,37 @@ public class PostController {
     // Método para obtener el timeline de un usuario
     @GetMapping("/timeline/{userId}")
     public ResponseEntity<List<Post>> getTimeline(@PathVariable Integer userId) {
-        List<Post> timelinePosts = postService.getPostsByUser(userId);
-        if (timelinePosts.isEmpty()) {
+        User user = userService.getUserById(userId);
+        Set<Post> timeline = new HashSet<>();
+
+        // Obtener posts del propio usuario
+        List<Post> userPosts = postService.getPostsByUser(userId);
+        timeline.addAll(userPosts);
+
+        // Obtener posts de los usuarios seguidos
+        Set<User> followedUsers = userService.getFollowedUsers(user.getFollowedIds());
+        for (User followedUser : followedUsers) {
+            List<Post> followedUserPosts = postService.getPostsByUser(followedUser.getId());
+            timeline.addAll(followedUserPosts);
+        }
+
+        // Filtrar los posts con imagen no nula y no vacía
+        Set<Post> filteredTimeline = timeline.stream()
+                .filter(post -> post.getImage() != null && !post.getImage().isEmpty())
+                .collect(Collectors.toSet());
+
+        // Verificar si la lista de timeline filtrada está vacía
+        if (filteredTimeline.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        List<Post> filteredAndSortedPosts = timelinePosts.stream()
-            .filter(post -> post.getImage() != null && !post.getImage().isEmpty())
-                .sorted(Comparator.comparing(Post::getFecha).reversed())
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(filteredAndSortedPosts);
+
+        // Transformar el Set a una List
+        List<Post> sortedTimeline = new ArrayList<>(filteredTimeline);
+
+        // Ordenar los posts por fecha (asumiendo que el Post tiene una propiedad `date`)
+        sortedTimeline.sort(Comparator.comparing(Post::getFecha).reversed());
+
+        return ResponseEntity.ok(sortedTimeline);
     }
 
     // Método para obtener posts de un usuario específico
