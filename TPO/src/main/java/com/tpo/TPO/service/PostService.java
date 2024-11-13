@@ -33,7 +33,7 @@ public class PostService {
 
     // Método para obtener todos los posts de un usuario específico
     public List<Post> getPostsByUser(Integer userId) {
-        return postRepository.getPostsByUser(userId);
+        return postRepository.findByUserId(userId);
     }
     
     // Método para obtener el timeline de un usuario

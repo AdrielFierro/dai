@@ -25,13 +25,13 @@ public class Post {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private ArrayList<String> image;
+    @ElementCollection
+    private List<String> image;
 
     @Column(nullable = false)
     private Integer userId;
 
-    @Column
+    @ElementCollection
     private List<Integer> usersLikes;
 
     @Column(nullable = false)

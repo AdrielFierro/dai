@@ -41,7 +41,7 @@ public class PostController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Post> createPost(@RequestHeader("Authorization") String authorizationHeader,
-            @ModelAttribute PostDTO postDTO)
+                                           @ModelAttribute PostDTO postDTO)
             throws IOException {
 
         Integer userId = userService.getIdfromToken(authorizationHeader);
@@ -59,11 +59,11 @@ public class PostController {
     }
 
     @GetMapping("/getImages/{postId}")
-    public ArrayList<String> getImagesFromPost(@PathVariable Integer postId) {
+    public List<String> getImagesFromPost(@PathVariable Integer postId) {
 
         Optional<Post> post = postService.getPostById(postId);
         Post realPost = post.get();
-        ArrayList<String> images = realPost.getImage();
+        List<String> images = realPost.getImage();
 
         return images;
 
