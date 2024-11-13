@@ -101,5 +101,10 @@ public class UserService {
         return idusuario;
 
     }
+    
+    public List<User> getRandomUsers(Pageable pageable) {
+        return userRepository.findRandomUsers(pageable); // Pass the pageable object directly
+    }
+    
 
 }
