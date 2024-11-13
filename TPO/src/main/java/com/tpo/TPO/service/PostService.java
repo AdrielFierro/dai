@@ -7,6 +7,7 @@ import com.tpo.TPO.repository.PostRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PostService {
@@ -35,9 +36,13 @@ public class PostService {
         return postRepository.findByUserId(userId);
     }
 
+    public List<Post> getPostsByUsers(Set<Integer> userIds) {
+        return postRepository.findAllByUserIdIn(userIds);
+    }
+/*
     // Método para obtener el timeline de un usuario
     public List<Post> getTimeline(Integer userId) {
         return postRepository.getTimeline(userId);
     }
-
+ */
 }

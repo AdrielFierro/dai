@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,6 +51,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    /*
     @ManyToMany
     @JoinTable(name = "user_followers", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private Set<User> followers;
@@ -57,6 +59,13 @@ public class User implements UserDetails {
     @ManyToMany
     @JoinTable(name = "user_followed", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
     private Set<User> followed;
+     */
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Integer> followersIds= new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Integer> followedIds= new HashSet<>();
 
     @Column
     private String backgroundImage;
@@ -71,4 +80,39 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+
+    public void addFollower(Integer userId) {
+        this.followersIds.add(userId);
+    }
+
+    public void addFollowed(Integer userId) {
+        this.followedIds.add(userId);
+    }
+
+    public void removeFollower(Integer userId) {
+        this.followersIds.remove(userId);
+    }
+
+    public void removeFollowed(Integer userId) {
+        this.followedIds.remove(userId);
+    }
+
+
+        // Métodos getter y setter para followedIds
+        public Set<Integer> getFollowedIds() {
+            return followedIds;
+        }
+    
+        public void setFollowedIds(Set<Integer> followedIds) {
+            this.followedIds = followedIds;
+        }
+    
+        // Métodos getter y setter para followersIds
+        public Set<Integer> getFollowersIds() {
+            return followersIds;
+        }
+    
+        public void setFollowersIds(Set<Integer> followersIds) {
+            this.followersIds = followersIds;
+        }
 }

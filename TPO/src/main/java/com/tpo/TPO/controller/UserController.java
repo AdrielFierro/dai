@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.tpo.TPO.entity.User;
+import com.tpo.TPO.repository.UserRepository;
 import com.tpo.TPO.service.UserService;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +19,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
+    private UserRepository userRepository;
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(
             @RequestParam String contains,
@@ -64,37 +65,41 @@ public class UserController {
         return ResponseEntity.ok(commentsCount);
     }
 
-    // Get Followers
+    // Endpoint para obtener los seguidores de un usuario
     @GetMapping("/{userId}/followers")
     public ResponseEntity<Set<User>> getFollowers(@PathVariable Integer userId) {
         Set<User> followers = userService.getFollowers(userId);
-        if (followers.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(followers);
     }
 
-    // Get Followed
+    // Endpoint para obtener los usuarios seguidos por un usuario
     @GetMapping("/{userId}/followed")
-    public ResponseEntity<Set<User>> getFollowed(@PathVariable Integer userId) {
-        Set<User> followed = userService.getFollowed(userId);
-        if (followed.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(followed);
+    public ResponseEntity<Set<User>> getFollowedUsers(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
+        Set<Integer> followedIds = user.getFollowedIds();
+    
+        // Consulta los usuarios por sus IDs
+        Set<User> followedUsers = userService.getFollowedUsers(followedIds);
+        return ResponseEntity.ok(followedUsers);
     }
+    
+    
 
     @PostMapping("/{userId}/follow/{followUserId}")
-    public ResponseEntity<User> followUser(
+    public ResponseEntity<String> followUser(
             @PathVariable Integer userId,
             @PathVariable Integer followUserId) {
         try {
-            User followedUser = userService.followUser(userId, followUserId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(followedUser);
+            User u = userService.getUserById(userId);
+            System.out.println(u.getFollowersIds());
+            userService.followUser(userId, followUserId);
+            return ResponseEntity.status(HttpStatus.CREATED).body("User followed successfully");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // Usuario ya seguido
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User is already followed");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Usuario no encontrado
+            System.out.println(userId);
+            System.out.println(followUserId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
 

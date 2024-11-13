@@ -11,6 +11,7 @@ import com.tpo.TPO.controller.config.JwtService;
 import com.tpo.TPO.entity.User;
 import com.tpo.TPO.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,6 +38,8 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        //Para mostrar tambien en el timeline las publicaciones propias
+        //user.addFollower(user.getId());
         return userRepository.save(user);
     }
 
@@ -54,17 +57,56 @@ public class UserService {
         return userRepository.countCommentsByUserId(userId);
     }
 
+
     // Método para obtener los seguidores de un usuario
     public Set<User> getFollowers(Integer userId) {
-        return userRepository.getFollowers(userId);
-    }
+        // Obtener el usuario y sus followersIds
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        Set<Integer> followersIds = user.getFollowersIds();
 
-    // Método para obtener los usuarios seguidos por un usuario
-    public Set<User> getFollowed(Integer userId) {
-        return userRepository.getFollowed(userId);
+        // Buscar todos los usuarios que correspondan a esos followersIds
+        return userRepository.findAllByIdIn(followersIds);
+    }
+ 
+    public Set<User> getFollowedUsers(Set<Integer> followedIds) {
+        return userRepository.findAllByIdIn(followedIds);
     }
 
     @Transactional
+    public User followUser(Integer userId, Integer followUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    
+        User userToFollow = userRepository.findById(followUserId)
+                .orElseThrow(() -> new RuntimeException("User to follow not found with id: " + followUserId));
+        // Asegúrate de que las listas no sean nulas
+        if (user.getFollowedIds() == null) {
+            user.setFollowedIds(new HashSet<>()); 
+            user.getFollowedIds().add(userId); // Inicializa la lista si es nula
+        }
+
+        if (userToFollow.getFollowersIds() == null) {
+            userToFollow.setFollowersIds(new HashSet<>());  // Inicializa la lista si es nula
+        }
+        // Verifica si el usuario ya está siguiendo al otro
+        if (user.getFollowedIds().contains(followUserId)) {
+            throw new IllegalArgumentException("User is already following the target user.");
+        }
+    
+        // Agrega el ID del usuario seguido a la lista de IDs de seguidos del usuario
+        user.getFollowedIds().add(followUserId);
+        
+        // Agrega el ID del usuario a la lista de seguidores del otro usuario
+        userToFollow.getFollowersIds().add(userId);
+    
+        // Guarda ambos usuarios
+        userRepository.save(user);
+        userRepository.save(userToFollow);
+    
+        return userToFollow; // Devuelve el usuario seguido
+    }
+   /*  @Transactional
     public User followUser(Integer userId, Integer followUserId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -84,7 +126,7 @@ public class UserService {
 
         return userToFollow; // Devuelve el usuario seguido
     }
-
+*/
     public boolean isEmailUsed(String email) {
         return userRepository.findByEmail(email).isPresent();
     }

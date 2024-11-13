@@ -23,11 +23,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
         int countCommentsByUserId(Integer id_user);
 
         // Método para obtener los seguidores de un usuario
-        @Query("SELECT f FROM User u JOIN u.followers f WHERE u.id = :userId")
+        @Query("SELECT u FROM User u WHERE :userId MEMBER OF u.followersIds")
         Set<User> getFollowers(@Param("userId") Integer userId);
 
-        // Método para obtener los seguidos de un usuario
-        @Query("SELECT f FROM User u JOIN u.followed f WHERE u.id = :userId")
+
+        // Método para obtener los usuarios seguidos por un usuario
+        @Query("SELECT u FROM User u WHERE :userId MEMBER OF u.followedIds")
         Set<User> getFollowed(@Param("userId") Integer userId);
 
         // Consulta para obtener usuarios aleatorios
@@ -39,5 +40,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
         Optional<User> findByUsername(String username);
 
         Optional<User> findByEmail(String email);
+        
+        Set<User> findAllByIdIn(Set<Integer> ids);
+
 
 }
