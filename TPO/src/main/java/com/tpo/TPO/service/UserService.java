@@ -148,5 +148,21 @@ public class UserService {
         return userRepository.findRandomUsers(); // Llamada a la consulta sin limit
     }
     
+    public void unfollowUser(Integer userId, Integer unfollowUserId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User userToUnfollow = userRepository.findById(unfollowUserId).orElseThrow(() -> new RuntimeException("User to unfollow not found"));
+        
+        // Verifica si el usuario ya sigue a este usuario
+        if (!user.getFollowedIds().contains(unfollowUserId)) {
+            throw new IllegalArgumentException("User is not following the specified user");
+        }
+        
+        // Elimina el ID del usuario seguido de la lista de seguidos
+        user.getFollowedIds().remove(unfollowUserId);
+        
+        // Guarda los cambios
+        userRepository.save(user);
+    }
+    
 
 }
