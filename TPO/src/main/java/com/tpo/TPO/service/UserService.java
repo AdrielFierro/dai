@@ -13,6 +13,7 @@ import com.tpo.TPO.repository.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -163,6 +164,11 @@ public class UserService {
         // Guarda los cambios
         userRepository.save(user);
     }
+
+    public List<User> searchUsersByUsername(String username) {
+        return userRepository.findByUsernameStartingWithIgnoreCase(username);
+    }
+    
     
 
 }

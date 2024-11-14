@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.tpo.TPO.entity.User;
 import com.tpo.TPO.service.UserService;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -32,6 +33,13 @@ public class UserController {
         User user = userService.getUserById(userId);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+    
+    @GetMapping("/search/{username}")
+    public ResponseEntity<List<User>> searchUsersByUsername(@PathVariable String username) {
+        List<User> users = userService.searchUsersByUsername(username);
+        return users.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).build() : ResponseEntity.ok(users);
+    }
+    
 
     // Post User
     @PostMapping
