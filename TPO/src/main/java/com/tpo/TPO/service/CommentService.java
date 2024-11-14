@@ -1,6 +1,7 @@
 package com.tpo.TPO.service;
 
 import com.tpo.TPO.entity.Comment;
+import com.tpo.TPO.exceptions.NoCommentFound;
 import com.tpo.TPO.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +30,24 @@ public class CommentService {
     }
 
     // Delete a specific comment of a post
-    public boolean deleteComment(Integer postId, Integer commentId) {
+    public boolean deleteComment(Integer postId, Integer commentId) throws NoCommentFound {
         Optional<Comment> comment = commentRepository.findByPostIdAndCommentId(postId, commentId);
         if (comment.isPresent()) {
             commentRepository.deleteById(commentId);
             return true;
         }
-        return false;
+        throw new NoCommentFound();
+    }
+
+    // Get a specific comment
+    public Optional<Comment> getComment(Integer postId, Integer commentId) throws NoCommentFound {
+
+        Optional<Comment> comment = commentRepository.findByPostIdAndCommentId(postId, commentId);
+
+        if (comment.isPresent()) {
+            return comment;
+        }
+        throw new NoCommentFound();
+
     }
 }
