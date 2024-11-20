@@ -192,14 +192,15 @@ public class UserController {
     }
 
     // Get Random Users
-    @GetMapping("/random")
-    public ResponseEntity<List<User>> getRandomUsers() {
-        List<User> randomUsers = userService.getRandomUsers(); // No es necesario pasar limit
+    @GetMapping("/random/{userId}")
+    public ResponseEntity<List<User>> getRandomUsers(@PathVariable Integer userId) {
+        List<User> randomUsers = userService.getRandomUsers(userId); // Pasamos el userId
         if (randomUsers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         System.out.println(randomUsers);
         return ResponseEntity.ok(randomUsers);
     }
+    
 
 }

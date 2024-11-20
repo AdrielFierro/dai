@@ -145,9 +145,10 @@ public class UserService {
 
     }
     
-    public List<User> getRandomUsers() {
-        return userRepository.findRandomUsers(); // Llamada a la consulta sin limit
+    public List<User> getRandomUsers(Integer userId) {
+        return userRepository.findRandomUsers(userId); // Pasamos el userId
     }
+    
     
     public void unfollowUser(Integer userId, Integer unfollowUserId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
