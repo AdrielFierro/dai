@@ -170,6 +170,70 @@ public class UserService {
         return userRepository.findByUsernameStartingWithIgnoreCase(username);
     }
     
-    
+    @Transactional
+    public void deleteFollowingByUser(Integer userId) {
+        // Buscar el usuario original
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        
+        // Obtener todos los IDs de las personas que sigue el usuario
+        Set<Integer> followedIds = user.getFollowedIds();
+
+        // Verificar si el usuario no sigue a nadie
+        if (followedIds == null || followedIds.isEmpty()) {
+            return; // No hay nada que eliminar
+        }
+
+        // Para cada ID seguido, eliminar al usuario de la lista de followers de ese usuario
+        for (Integer followedId : followedIds) {
+            User followedUser = userRepository.findById(followedId)
+                    .orElseThrow(() -> new RuntimeException("Followed user not found with id: " + followedId));
+
+            // Remover el userId de la lista de followers del usuario seguido
+            if (followedUser.getFollowersIds() != null) {
+                followedUser.getFollowersIds().remove(userId);
+            }
+
+            // Guardar el usuario seguido actualizado
+            userRepository.save(followedUser);
+        }
+
+        // Limpiar la lista de seguidos del usuario original
+        //user.setFollowedIds(new HashSet<>());
+        //userRepository.save(user); // Guardar el usuario original actualizado
+    }
+
+    @Transactional
+public void deleteFollowersByUser(Integer userId) {
+    // Buscar el usuario original
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+    // Obtener todos los IDs de los seguidores
+    Set<Integer> followersIds = user.getFollowersIds();
+
+    // Verificar si el usuario no tiene seguidores
+    if (followersIds == null || followersIds.isEmpty()) {
+        return; // No hay nada que eliminar
+    }
+
+    // Para cada ID de seguidor, eliminar al usuario original de su lista de seguidos
+    for (Integer followerId : followersIds) {
+        User followerUser = userRepository.findById(followerId)
+                .orElseThrow(() -> new RuntimeException("Follower user not found with id: " + followerId));
+
+        // Remover el userId de la lista de seguidos del usuario seguidor
+        if (followerUser.getFollowedIds() != null) {
+            followerUser.getFollowedIds().remove(userId);
+        }
+
+        // Guardar el usuario seguidor actualizado
+        userRepository.save(followerUser);
+    }
+
+    // Limpiar la lista de seguidores del usuario original
+    //user.setFollowersIds(new HashSet<>());
+    //userRepository.save(user); // Guardar el usuario original actualizado
+}
 
 }

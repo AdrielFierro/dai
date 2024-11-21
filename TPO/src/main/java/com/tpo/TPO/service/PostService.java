@@ -68,4 +68,22 @@ public class PostService {
 
         return post;
     }
+
+    public void deleteAllPostsByUser(Integer userId) {
+        List<Post> posts = postRepository.findByUserId(userId);
+        postRepository.deleteAll(posts);
+    }
+
+    public void deleteAllLikesByUser(Integer userId) {
+        // Obtener todos los posts disponibles
+        List<Post> allPosts = getAllPosts();
+    
+        // Recorrer cada post
+        for (Post post : allPosts) {
+            // Si el usuario dio like al post, removerlo
+            if (post.getUsersLikes() != null && post.getUsersLikes().contains(userId)) {
+                removeUserLike(post.getPostId(), userId); // Reutilizamos el servicio existente
+            }
+        }
+    }
 }

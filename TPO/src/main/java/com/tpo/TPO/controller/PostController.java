@@ -140,4 +140,6 @@ public class PostController {
         return ResponseEntity.ok(updatedPost); // Devuelve el post actualizado
     }
 
+
+
 }

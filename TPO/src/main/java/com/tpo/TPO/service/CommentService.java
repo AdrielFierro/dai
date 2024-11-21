@@ -50,4 +50,14 @@ public class CommentService {
         throw new NoCommentFound();
 
     }
+
+    public void deleteAllCommentsByUser(Integer userId) {
+        // Obtener todos los comentarios del usuario
+        List<Comment> userComments = commentRepository.findByUserId(userId);
+    
+        // Eliminar todos los comentarios del usuario
+        if (!userComments.isEmpty()) {
+            commentRepository.deleteAll(userComments);
+        }
+    }
 }

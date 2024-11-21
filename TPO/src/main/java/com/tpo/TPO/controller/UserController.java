@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import com.tpo.TPO.controller.dto.UserDTO;
 import com.tpo.TPO.entity.User;
+import com.tpo.TPO.service.CommentService;
 import com.tpo.TPO.service.ImageService;
+import com.tpo.TPO.service.PostService;
+import com.tpo.TPO.service.RefreshTokenService;
 import com.tpo.TPO.service.UserService;
 
 import java.io.IOException;
@@ -25,7 +28,14 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
+    private PostService postService;
+    @Autowired
     private ImageService imageService;
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(
@@ -89,6 +99,12 @@ public class UserController {
     // Delete User
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
+        postService.deleteAllPostsByUser(userId);
+        postService.deleteAllLikesByUser(userId);
+        commentService.deleteAllCommentsByUser(userId);
+        userService.deleteFollowingByUser(userId);
+        userService.deleteFollowersByUser(userId);
+        refreshTokenService.deleteTokensByUserId(userId);
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
