@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req.requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/pass/**").permitAll()
                         .requestMatchers("/image/**").permitAll()
+                        .requestMatchers("/favorites/**").permitAll()
                         .requestMatchers("/users/email").permitAll()
                         .requestMatchers(HttpMethod.GET).permitAll()
                         .requestMatchers(HttpMethod.PUT)
