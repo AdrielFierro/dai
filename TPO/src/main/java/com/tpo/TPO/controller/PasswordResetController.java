@@ -34,6 +34,12 @@ public class PasswordResetController {
         return ResponseEntity.ok().build(); // Respondemos con 200 OK
     }
 
+    @PostMapping("/verify-email")
+    public ResponseEntity<Void> verifyUserEmail(@RequestParam String email) {
+        passwordResetService.verifyUserEmail(email);
+        return ResponseEntity.ok().build(); // Respondemos con 200 OK
+    }
+
     // Endpoint para verificar el TOTP
     @PostMapping("/verify-totp")
     public ResponseEntity<Map<String, Boolean>> verifyTotp(@RequestParam String email, @RequestParam String totpCode) {

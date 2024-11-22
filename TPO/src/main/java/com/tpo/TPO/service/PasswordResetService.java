@@ -54,6 +54,13 @@ public class PasswordResetService {
         sendEmail(email, subject, body); // Envía el correo
     }
 
+    public void verifyUserEmail(String email) {
+        String totpCode = generateTOTP(email); // Genera el TOTP
+        String subject = "Account verification Code";
+        String body = "Your TOTP code for account verification is: " + totpCode + ". This code will expire in 5 minutes.";
+        sendEmail(email, subject, body); // Envía el correo
+    }
+
     // Verificar si el código TOTP ingresado es correcto
     public boolean verifyTOTP(String email, String inputCode) {
         String storedCode = resetTokens.get(email);
