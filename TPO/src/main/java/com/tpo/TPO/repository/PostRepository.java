@@ -24,4 +24,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
    * List<Post> getTimeline(@Param("userId") Integer userId);
    */
   List<Post> findAllByUserIdIn(Set<Integer> userIds);
+
 }

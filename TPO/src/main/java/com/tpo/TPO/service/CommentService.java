@@ -61,4 +61,9 @@ public class CommentService {
             commentRepository.deleteAll(userComments);
         }
     }
+
+    // Contar comentarios por UserId
+    public int countCommentsByUserId(Integer userId) {
+        return commentRepository.countByUserId(userId);
+    }
 }

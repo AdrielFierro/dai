@@ -1,11 +1,12 @@
 package com.tpo.TPO.controller;
 
+import com.tpo.TPO.entity.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.tpo.TPO.controller.dto.UserScoreResponseDTO;
 import com.tpo.TPO.controller.dto.UserDTO;
 import com.tpo.TPO.entity.User;
 import com.tpo.TPO.service.CommentService;
@@ -217,6 +218,42 @@ public class UserController {
         System.out.println(randomUsers);
         return ResponseEntity.ok(randomUsers);
     }
-    
+    // Nuevo método para obtener la puntuación de gamificación de un usuario
+    @GetMapping("/{userId}/score")
+    public ResponseEntity<UserScoreResponseDTO> getUserGamificationScore(@PathVariable Integer userId) {
+        try {
+            // Verificar si el usuario existe
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            // Obtener los posts del usuario
+            List<Post> posts = postService.getPostsByUserId(userId);
+
+            // Obtener el número de comentarios del usuario
+            int commentsCount = commentService.countCommentsByUserId(userId);
+
+            // Calcular la puntuación
+            int score = 1; // Valor por defecto
+            if (posts.size() == 2) {
+                score = 2;
+            } else if (posts.size() >= 4) {
+                if (commentsCount < 4) {
+                    score = 3;
+                } else {
+                    score = 4;
+                }
+            }
+
+            UserScoreResponseDTO response = new UserScoreResponseDTO(score, commentsCount, posts.size());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // Manejo de cualquier error inesperado
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 
 }
