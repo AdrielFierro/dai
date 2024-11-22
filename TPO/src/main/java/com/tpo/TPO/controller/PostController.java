@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 @RestController
 @RequestMapping("/posts")
 public class PostController {
@@ -125,5 +126,20 @@ public class PostController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(filteredPosts);
     }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Post> addLike(@PathVariable Integer postId, @RequestParam Integer userId) {
+        Post updatedPost = postService.addUserLike(postId, userId);
+        return ResponseEntity.ok(updatedPost); // Devolver el post actualizado
+    }
+    
+    // Endpoint para eliminar un like
+    @DeleteMapping("/{postId}/like")
+    public ResponseEntity<Post> removeLike(@PathVariable Integer postId, @RequestParam Integer userId) {
+        Post updatedPost = postService.removeUserLike(postId, userId);
+        return ResponseEntity.ok(updatedPost); // Devuelve el post actualizado
+    }
+
+
 
 }

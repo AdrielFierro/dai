@@ -8,6 +8,8 @@ import com.tpo.TPO.entity.RefreshToken;
 import com.tpo.TPO.repository.RefreshTokenRepository;
 import com.tpo.TPO.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,6 +52,11 @@ public class RefreshTokenService {
 
         return token;
 
+    }
+
+    @Transactional
+    public void deleteTokensByUserId(Integer userId) {
+        refreshTokenRepository.deleteByUser_id(userId);
     }
 
 }

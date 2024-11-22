@@ -2,13 +2,24 @@ package com.tpo.TPO.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.tpo.TPO.controller.dto.UserDTO;
 import com.tpo.TPO.entity.User;
+import com.tpo.TPO.service.CommentService;
+import com.tpo.TPO.service.ImageService;
+import com.tpo.TPO.service.PostService;
+import com.tpo.TPO.service.RefreshTokenService;
 import com.tpo.TPO.service.UserService;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("/users")
@@ -16,6 +27,15 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private ImageService imageService;
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(
@@ -49,15 +69,42 @@ public class UserController {
     }
 
     // Update User
-    @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestBody User user) {
+    @PutMapping(value = "/{userId}", consumes = "multipart/form-data")
+    public ResponseEntity<User> updateUser(
+        @PathVariable Integer userId,
+        @ModelAttribute UserDTO userDto
+    ) throws IOException {
+        ArrayList<String> urlImage = imageService.fileToURL(userDto.getUrlImage());
+        ArrayList<String> backImage = imageService.fileToURL(userDto.getBackImage());
+        
+
+        User user = userService.getUserById(userId);
+        safeSet(userDto.getName(), user::setName);
+        safeSet(userDto.getLastName(), user::setLastName);
+        safeSet(userDto.getDescripcion(), user::setDescription);
+        safeSet(userDto.getUsername(), user::setUsername);
+
+        user.setBackgroundImage(backImage.get(0));
+        user.setUrlImage(urlImage.get(0));
         User updatedUser = userService.updateUser(userId, user);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
-
+    
+    private void safeSet(String newValue, Consumer<String> setter) {
+        if (newValue != null && !newValue.isEmpty()) {
+            setter.accept(newValue);
+        }
+    }
+    
     // Delete User
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
+        postService.deleteAllPostsByUser(userId);
+        postService.deleteAllLikesByUser(userId);
+        commentService.deleteAllCommentsByUser(userId);
+        userService.deleteFollowingByUser(userId);
+        userService.deleteFollowersByUser(userId);
+        refreshTokenService.deleteTokensByUserId(userId);
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -161,14 +208,15 @@ public class UserController {
     }
 
     // Get Random Users
-    @GetMapping("/random")
-    public ResponseEntity<List<User>> getRandomUsers() {
-        List<User> randomUsers = userService.getRandomUsers(); // No es necesario pasar limit
+    @GetMapping("/random/{userId}")
+    public ResponseEntity<List<User>> getRandomUsers(@PathVariable Integer userId) {
+        List<User> randomUsers = userService.getRandomUsers(userId); // Pasamos el userId
         if (randomUsers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         System.out.println(randomUsers);
         return ResponseEntity.ok(randomUsers);
     }
+    
 
 }

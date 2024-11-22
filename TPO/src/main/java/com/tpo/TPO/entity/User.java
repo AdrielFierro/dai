@@ -75,6 +75,7 @@ public class User implements UserDetails {
     @Column
     private List<Post> favPosts;
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

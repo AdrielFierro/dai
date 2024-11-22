@@ -39,10 +39,51 @@ public class PostService {
     public List<Post> getPostsByUsers(Set<Integer> userIds) {
         return postRepository.findAllByUserIdIn(userIds);
     }
-/*
-    // Método para obtener el timeline de un usuario
-    public List<Post> getTimeline(Integer userId) {
-        return postRepository.getTimeline(userId);
+
+    public Post addUserLike(Integer postId, Integer userId) {
+        // Buscar el post por ID
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post no encontrado"));
+
+        // Verificar si el userId ya está en la lista de likes
+        if (!post.getUsersLikes().contains(userId)) {
+            // Agregar el userId a la lista de likes
+            post.getUsersLikes().add(userId);
+            postRepository.save(post); // Guardar el post actualizado
+        }
+
+        return post;
     }
- */
+
+     // Método para quitar un like
+    public Post removeUserLike(Integer postId, Integer userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post no encontrado"));
+
+        // Verificar si el userId está en la lista de likes y eliminarlo
+        if (post.getUsersLikes().contains(userId)) {
+            post.getUsersLikes().remove(userId);
+            postRepository.save(post); // Guardar el post actualizado
+        }
+
+        return post;
+    }
+
+    public void deleteAllPostsByUser(Integer userId) {
+        List<Post> posts = postRepository.findByUserId(userId);
+        postRepository.deleteAll(posts);
+    }
+
+    public void deleteAllLikesByUser(Integer userId) {
+        // Obtener todos los posts disponibles
+        List<Post> allPosts = getAllPosts();
+    
+        // Recorrer cada post
+        for (Post post : allPosts) {
+            // Si el usuario dio like al post, removerlo
+            if (post.getUsersLikes() != null && post.getUsersLikes().contains(userId)) {
+                removeUserLike(post.getPostId(), userId); // Reutilizamos el servicio existente
+            }
+        }
+    }
 }
