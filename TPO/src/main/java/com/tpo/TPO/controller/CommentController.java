@@ -39,7 +39,7 @@ public class CommentController {
 
     // Post a new comment to a post
     @PostMapping
-    public ResponseEntity<Comment> postCommentsPostID(@PathVariable Integer postId, @RequestBody Comment comment,
+    public ResponseEntity<Comment> postCommentsPostID(@PathVariable Integer postId, @RequestBody String comment,
             @RequestHeader("Authorization") String authorizationHeader) {
 
         Integer userId = userService.getIdfromToken(authorizationHeader);
@@ -56,6 +56,9 @@ public class CommentController {
         try {
 
             Optional<Comment> commentToDelete = commentService.getComment(postId, commentId);
+            if (commentToDelete.isEmpty()) {
+                throw new NoCommentFound();
+            }
             Comment commentToDeleteReal = commentToDelete.get();
             Integer userIdcommentToDelete = commentToDeleteReal.getUserId();
             Integer userId = userService.getIdfromToken(authorizationHeader);
@@ -68,9 +71,13 @@ public class CommentController {
 
             }
             throw new NoMatchUserException();
+        } catch (NoCommentFound e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No comment was found");
+        }
 
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+        catch (NoMatchUserException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No User was found with this id/ You're not the owner of the resource");
         }
 
     }

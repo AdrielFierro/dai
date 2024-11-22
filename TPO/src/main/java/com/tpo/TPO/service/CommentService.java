@@ -19,14 +19,15 @@ public class CommentService {
 
     // Retrieve all comments of a specific post
     public List<Comment> getCommentsByPostId(Integer postId) {
+
         return commentRepository.findByPostId(postId);
     }
 
     // Post a new comment to a post
-    public Comment createComment(Integer postId, Comment comment, Integer userId) {
-        comment.setPostId(postId);
-        comment.setUserId(userId);
-        return commentRepository.save(comment);
+    public Comment createComment(Integer postId, String comment, Integer userId) {
+
+        Comment createdComment = Comment.builder().comment(comment).postId(postId).userId(userId).build();
+        return commentRepository.save(createdComment);
     }
 
     // Delete a specific comment of a post

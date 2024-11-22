@@ -1,17 +1,19 @@
 package com.tpo.TPO.entity;
 
 import jakarta.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 //import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Comment {
 
-    public Comment() {
-    }
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
