@@ -1,5 +1,7 @@
 package com.tpo.TPO.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -40,4 +42,20 @@ public class GeoService {
         }
         return null;
     }
+
+    public List<GooglePlacesResponse.Place> getNearbyPlaces(double lat, double lng, int radius) {
+        String url = UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+                .queryParam("location", lat + "," + lng)
+                .queryParam("radius", radius)
+                .queryParam("key", apiKey)
+                .toUriString();
+    
+        GooglePlacesResponse response = restTemplate.getForObject(url, GooglePlacesResponse.class);
+    
+        if (response != null && response.getResults() != null) {
+            return response.getResults();
+        }
+        return List.of(); // Retorna una lista vacía si no hay resultados
+    }
+    
 }
