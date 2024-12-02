@@ -79,6 +79,20 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No User was found with this id/ You're not the owner of the resource");
         }
+    }
 
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countCommentsByPostId(@PathVariable Integer postId) {
+        try {
+            int count = commentService.countCommentsByPostId(postId);
+            if (count == 0) {
+                return ResponseEntity.noContent().build(); // 204 No Content
+            } else {
+                return ResponseEntity.ok(count); // 200 OK
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null); // 500 Internal Server Error, sin cuerpo en la respuesta para errores internos.
+        }
     }
 }

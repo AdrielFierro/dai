@@ -66,4 +66,17 @@ public class CommentService {
     public int countCommentsByUserId(Integer userId) {
         return commentRepository.countByUserId(userId);
     }
+
+    public int countCommentsByPostId(Integer postId) {
+        if (postId == null) {
+            throw new IllegalArgumentException("El postId no puede ser nulo");
+        }
+
+        int count = commentRepository.countByPostId(postId);
+        if (count == 0) {
+            // Cambiar la respuesta en lugar de lanzar una excepción
+            // return -1; o manejar de otra forma la ausencia
+        }
+        return count;
+    }
 }

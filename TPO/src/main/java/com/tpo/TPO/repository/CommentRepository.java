@@ -20,4 +20,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     // Contar comentarios por UserId
     int countByUserId(Integer userId);
+
+    // Contar comentarios por PostId
+    int countByPostId(Integer postId);
 }
