@@ -2,6 +2,7 @@ package com.tpo.TPO.service;
 
 import com.tpo.TPO.entity.Favorite;
 import com.tpo.TPO.entity.Post;
+import com.tpo.TPO.exceptions.FavoriteNotFoundException;
 import com.tpo.TPO.repository.FavoriteRepository;
 import com.tpo.TPO.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,4 +43,15 @@ public class FavoriteService {
 
         return favoriteRepository.addFavorite(favorite);
     }
+    public int deleteFavoriteByUserIdAndPostId(Integer userId, Integer postId) {
+        Optional<Integer> favoriteId = favoriteRepository.findIdByUserIdAndPostId(userId, postId);
+
+        if (favoriteId.isPresent()) {
+            favoriteRepository.deleteById(favoriteId.get());
+            return favoriteId.get();
+        } else {
+            return -1; // Retorna -1 si no se encuentra
+        }
+    }
+
 }

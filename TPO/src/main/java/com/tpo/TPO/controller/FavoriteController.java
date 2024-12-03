@@ -3,6 +3,7 @@ package com.tpo.TPO.controller;
 import com.tpo.TPO.controller.dto.FavoriteDTO;
 import com.tpo.TPO.entity.Favorite;
 import com.tpo.TPO.entity.Post;
+import com.tpo.TPO.exceptions.FavoriteNotFoundException;
 import com.tpo.TPO.service.FavoriteService;
 import com.tpo.TPO.service.PostService;
 import com.tpo.TPO.service.UserService;
@@ -75,6 +76,18 @@ public class FavoriteController {
             return ResponseEntity.status(HttpStatus.CREATED).body(addedFavorite);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // Método para eliminar un favorito
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteFavorite(@RequestBody FavoriteDTO favoriteDTO) {
+        int deletedId = favoriteService.deleteFavoriteByUserIdAndPostId(favoriteDTO.getUserId(), favoriteDTO.getPostId());
+
+        if (deletedId != -1) {
+            return ResponseEntity.ok("El favorito con ID " + deletedId + " fue eliminado exitosamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Favorite no encontrado para userId: " + favoriteDTO.getUserId() + " y postId: " + favoriteDTO.getPostId());
         }
     }
 }

@@ -92,7 +92,7 @@ public class CommentController {
             }
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null); // 500 Internal Server Error, sin cuerpo en la respuesta para errores internos.
+                    .body(null); // 500 Internal Server Error, para errores no controlados
         }
     }
 }
