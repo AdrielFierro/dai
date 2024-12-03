@@ -61,6 +61,7 @@ public class UserController {
     @GetMapping("/search/{username}")
     public ResponseEntity<List<User>> searchUsersByUsername(@PathVariable String username) {
         List<User> users = userService.searchUsersByUsername(username);
+
         return users.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).build() : ResponseEntity.ok(users);
     }
     
@@ -239,7 +240,7 @@ public class UserController {
 
             // Calcular la puntuación
             int score = 1; // Valor por defecto
-            if (posts.size() == 2) {
+            if ((posts.size() > 2) & (posts.size() < 4) ) {
                 score = 2;
             } else if (posts.size() >= 4) {
                 if (commentsCount < 4) {
