@@ -15,12 +15,15 @@ import com.tpo.TPO.service.PostService;
 import com.tpo.TPO.service.RefreshTokenService;
 import com.tpo.TPO.service.UserService;
 
+import jakarta.persistence.NoResultException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+
 
 @RestController
 @RequestMapping("/users")
@@ -252,6 +255,24 @@ public class UserController {
         } catch (Exception e) {
             // Manejo de cualquier error inesperado
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    //Obtener cantidad de comentarios
+    @GetMapping("/{userId}/cant/comments")
+    public ResponseEntity<?> getCantComments(@PathVariable Integer userId) {
+        try {
+            // Lógica para contar los comentarios del usuario
+            int commentsCount = commentService.countCommentsByUserId(userId);
+            return ResponseEntity.ok(commentsCount);
+        } catch (NoResultException e) {
+            // Maneja el caso en el que no se encuentran resultados
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontraron comentarios para el usuario con ID " + userId + ".");
+        } catch (Exception e) {
+            // Manejo genérico de excepciones
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocurrió un error al obtener la cantidad de comentarios.");
         }
     }
 
