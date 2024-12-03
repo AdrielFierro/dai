@@ -1,5 +1,6 @@
 package com.tpo.TPO.controller;
 
+import com.tpo.TPO.controller.dto.CommentDTO;
 import com.tpo.TPO.entity.Comment;
 import com.tpo.TPO.exceptions.NoCommentFound;
 import com.tpo.TPO.exceptions.NoMatchUserException;
@@ -17,13 +18,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/posts/{postId}/comments")
 public class CommentController {
-
-    private final CommentService commentService;
-
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
-
+    @Autowired
+    CommentService commentService;
     @Autowired
     UserService userService;
 
@@ -31,20 +27,18 @@ public class CommentController {
     @GetMapping
     public ResponseEntity<List<Comment>> getCommentsPostID(@PathVariable Integer postId) {
         List<Comment> comments = commentService.getCommentsByPostId(postId);
-        if (comments.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+
         return ResponseEntity.ok(comments);
     }
 
     // Post a new comment to a post
     @PostMapping
-    public ResponseEntity<Comment> postCommentsPostID(@PathVariable Integer postId, @RequestBody String comment,
+    public ResponseEntity<Comment> postCommentsPostID(@PathVariable Integer postId, @RequestBody CommentDTO commentDTO,
             @RequestHeader("Authorization") String authorizationHeader) {
 
         Integer userId = userService.getIdfromToken(authorizationHeader);
 
-        Comment createdComment = commentService.createComment(postId, comment, userId);
+        Comment createdComment = commentService.createComment(postId, commentDTO, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 

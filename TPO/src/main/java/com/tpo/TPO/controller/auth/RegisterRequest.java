@@ -1,6 +1,7 @@
 
 package com.tpo.TPO.controller.auth;
 
+import com.tpo.TPO.entity.Genre;
 import com.tpo.TPO.entity.Role;
 
 import lombok.AllArgsConstructor;
@@ -20,4 +21,5 @@ public class RegisterRequest {
     private String email;
     private String password;
     private Role role;
+    private Genre genre;
 }

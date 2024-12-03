@@ -1,5 +1,6 @@
 package com.tpo.TPO.service;
 
+import com.tpo.TPO.controller.dto.CommentDTO;
 import com.tpo.TPO.entity.Comment;
 import com.tpo.TPO.exceptions.NoCommentFound;
 import com.tpo.TPO.repository.CommentRepository;
@@ -24,9 +25,11 @@ public class CommentService {
     }
 
     // Post a new comment to a post
-    public Comment createComment(Integer postId, String comment, Integer userId) {
+    public Comment createComment(Integer postId, CommentDTO comment, Integer userId) {
 
-        Comment createdComment = Comment.builder().comment(comment).postId(postId).userId(userId).build();
+        String comentario = comment.getComment();
+
+        Comment createdComment = Comment.builder().comment(comentario).postId(postId).userId(userId).build();
         return commentRepository.save(createdComment);
     }
 
@@ -55,7 +58,7 @@ public class CommentService {
     public void deleteAllCommentsByUser(Integer userId) {
         // Obtener todos los comentarios del usuario
         List<Comment> userComments = commentRepository.findByUserId(userId);
-    
+
         // Eliminar todos los comentarios del usuario
         if (!userComments.isEmpty()) {
             commentRepository.deleteAll(userComments);

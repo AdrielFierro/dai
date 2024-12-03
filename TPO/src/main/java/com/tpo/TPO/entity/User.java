@@ -51,15 +51,16 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    /*
-    @ManyToMany
-    @JoinTable(name = "user_followers", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
-    private Set<User> followers;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
 
-    @ManyToMany
-    @JoinTable(name = "user_followed", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
-    private Set<User> followed;
-     */
+    @PrePersist
+    public void PrePersist() {
+        if (genre == null) {
+            genre = Genre.NOTSAID;
+        }
+    }
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Integer> followersIds = new HashSet<>();
@@ -75,12 +76,10 @@ public class User implements UserDetails {
     @Column
     private List<Post> favPosts;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
-
 
     public void addFollower(Integer userId) {
         this.followersIds.add(userId);
@@ -97,7 +96,6 @@ public class User implements UserDetails {
     public void removeFollowed(Integer userId) {
         this.followedIds.remove(userId);
     }
-
 
     // Métodos getter y setter para followedIds
     public Set<Integer> getFollowedIds() {

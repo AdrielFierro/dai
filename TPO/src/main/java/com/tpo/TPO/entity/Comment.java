@@ -24,8 +24,7 @@ public class Comment {
     @Column
     private Integer userId;
 
-    @Column
+    @Column(nullable = false)
     private String comment;
 
-    // Puedes agregar más relaciones si es necesario
 }
