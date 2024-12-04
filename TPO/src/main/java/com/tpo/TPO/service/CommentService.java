@@ -6,6 +6,7 @@ import com.tpo.TPO.exceptions.NoCommentFound;
 import com.tpo.TPO.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +27,18 @@ public class CommentService {
 
     // Post a new comment to a post
     public Comment createComment(Integer postId, CommentDTO comment, Integer userId) {
-
         String comentario = comment.getComment();
 
-        Comment createdComment = Comment.builder().comment(comentario).postId(postId).userId(userId).build();
+        // Asigna la fecha y hora actual a timestamp
+        LocalDateTime currentTimestamp = LocalDateTime.now();
+
+        Comment createdComment = Comment.builder()
+                .comment(comentario)
+                .postId(postId)
+                .userId(userId)
+                .timestamp(currentTimestamp)  // Mapea el timestamp actual
+                .build();
+
         return commentRepository.save(createdComment);
     }
 
