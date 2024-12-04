@@ -42,6 +42,10 @@ public class UserDTO {
         this.backImage = backImage;
     }
 
+    public void setDescripcion(String desc){
+        this.descripcion = desc;
+    }
+
     public String getName() {
         return name;
     }

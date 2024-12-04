@@ -79,18 +79,29 @@ public class UserController {
         @PathVariable Integer userId,
         @ModelAttribute UserDTO userDto
     ) throws IOException {
-        ArrayList<String> urlImage = imageService.fileToURL(userDto.getUrlImage());
-        ArrayList<String> backImage = imageService.fileToURL(userDto.getBackImage());
-        
+  
 
         User user = userService.getUserById(userId);
         safeSet(userDto.getName(), user::setName);
         safeSet(userDto.getLastName(), user::setLastName);
+        System.out.println(userDto.getDescripcion());
         safeSet(userDto.getDescripcion(), user::setDescription);
         safeSet(userDto.getUsername(), user::setUsername);
 
-        user.setBackgroundImage(backImage.get(0));
-        user.setUrlImage(urlImage.get(0));
+        // Manejar imágenes solo si no son nulas
+        if (userDto.getUrlImage() != null && !userDto.getUrlImage().isEmpty()) {
+            ArrayList<String> urlImage = imageService.fileToURL(userDto.getUrlImage());
+            if (!urlImage.isEmpty()) {
+                user.setUrlImage(urlImage.get(0));
+            }
+        }
+        
+        if (userDto.getBackImage() != null && !userDto.getBackImage().isEmpty()) {
+            ArrayList<String> backImage = imageService.fileToURL(userDto.getBackImage());
+            if (!backImage.isEmpty()) {
+                user.setBackgroundImage(backImage.get(0));
+            }
+        }
         User updatedUser = userService.updateUser(userId, user);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
