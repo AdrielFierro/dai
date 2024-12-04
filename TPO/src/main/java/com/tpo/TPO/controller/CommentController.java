@@ -1,10 +1,13 @@
 package com.tpo.TPO.controller;
 
 import com.tpo.TPO.controller.dto.CommentDTO;
+import com.tpo.TPO.controller.dto.CommentResponseDTO;
 import com.tpo.TPO.entity.Comment;
+import com.tpo.TPO.entity.Post;
 import com.tpo.TPO.exceptions.NoCommentFound;
 import com.tpo.TPO.exceptions.NoMatchUserException;
 import com.tpo.TPO.service.CommentService;
+import com.tpo.TPO.service.PostService;
 import com.tpo.TPO.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts/{postId}/comments")
@@ -22,13 +26,42 @@ public class CommentController {
     CommentService commentService;
     @Autowired
     UserService userService;
+    @Autowired
+    PostService postService;
 
     // Retrieve all comments of a specific post
     @GetMapping
-    public ResponseEntity<List<Comment>> getCommentsPostID(@PathVariable Integer postId) {
+    public ResponseEntity<List<CommentResponseDTO>> getCommentsPostID(@PathVariable Integer postId) {
+        // Intentamos obtener el post utilizando Optional
+        Optional<Post> postOptional = postService.getPostById(postId);
+
+        if (postOptional.isEmpty()) {
+            // Si el post no existe, retornamos un 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        // Obtenemos los comentarios
         List<Comment> comments = commentService.getCommentsByPostId(postId);
 
-        return ResponseEntity.ok(comments);
+        // Si no hay comentarios, retornamos un 204 No Content
+        if (comments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        // Transformamos los comentarios a `CommentDTO`
+        List<CommentResponseDTO> commentDTOs = comments.stream()
+                .map(comment -> new CommentResponseDTO(
+                        comment.getCommentId(),
+                        comment.getPostId(),
+                        comment.getUserId(),
+                        comment.getComment(),
+                        comment.getTimestamp(),
+                        comment.getTimeAgo()
+                ))
+                .collect(Collectors.toList());
+
+        // Retornamos 200 OK con la lista de comentarios
+        return ResponseEntity.ok(commentDTOs);
     }
 
     // Post a new comment to a post
