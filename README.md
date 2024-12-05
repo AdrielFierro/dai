@@ -47,9 +47,10 @@ Install dependencies
 ```bash
   npm install
 ```
-To start the application locally run from Visual Studio Code:
-1. Ubicarse en una clase principal del proyecto (dentro de src).
-2. Hacer clic en el botón Run (▶️) que aparece en la esquina superior derecha o usa el Spring Boot Dashboard.
+Para iniciar la aplicación local utilizar Visual Studio Code:
+1. Abrir el proyecto en VS Code.
+2. Ubicarse en una clase principal del proyecto (dentro de src).
+3. Hacer clic en el botón Run (▶️) que aparece en la esquina superior derecha o usa el Spring Boot Dashboard.
 
 ## Appendix
 
